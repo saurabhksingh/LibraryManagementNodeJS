@@ -1,0 +1,55 @@
+<script>
+	$(document).ready(function() {
+		$('#userInputDialog').bind('show', function () {
+			document.getElementById ("userId").value = document.title;
+			});
+		});
+	
+	function closeDialog () {
+		$('#userInputDialog').modal('hide'); 
+	};
+
+	function saveClicked () {
+		var userId = document.getElementById ('userId').value;
+		var bookId = document.getElementById ('bookId').value;
+		userId = userId+'@expedia.com';
+		//var id = '<%= _id %>';
+		alert(userId);
+		$.ajax({
+			  type: "PUT",
+			  url: '/books/'+bookId,
+			  dataType: 'json',
+			  processData: false,
+			  data: {_id:bookId, owner:userId}
+			}).done(function( msg ) {
+			  alert( "Data Saved: " + msg );
+		});
+		closeDialog ();
+		};
+</script>
+<a href="#books/<%= _id %>" class="thumbnail plain" style="text-align: center;">
+    <img src="<%= picture === null ? 'pics/generic.jpg' : 'pics/' + picture %>" height="150" width="125" alt="">
+    <h5><%= name %></h5>
+    <%= author %><br/>
+    Assigned to : <%= owner %><br/>
+    <input id="bookId" type="value" hidden="true" value="<%= _id %>">
+</a>
+<br/>
+<div id="userInputDialog" class="modal hide fade">
+	<div class="modal-header">
+		<a href="#" class="close">&times;</a>
+		<h3>Please enter your User Id</h3>
+	</div>
+	<div class="modal-body">
+		<div class="divDialogElements">
+			<input class="xlarge" id="userId" name="userId" type="text" />
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn primary" onclick="saveClicked();">Save</a>
+		<a href="#" class="btn secondary" onclick="closeDialog ();">Cancel</a>
+	</div>
+</div>
+<!--button id="assignToMeButton" class="btn btn-mini" href="#userInputDialog" data-toggle="modal">
+  		 Assign to me
+</button-->
